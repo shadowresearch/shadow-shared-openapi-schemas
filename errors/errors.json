@@ -15,7 +15,7 @@
             "enum": [
               "INTERNAL_API_ERROR",
               "INVALID_REQUEST_ERROR",
-              "AUTHENTICATION_ERROR",
+              "AUTHENTICATION_ERROR"
             ],
             "description": "General enumerated error type"
           },
