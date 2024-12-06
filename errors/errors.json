@@ -1,0 +1,92 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Standardized Error Schema",
+    "version": "1.0.0",
+    "description": "A reusable schema to standardize error responses with HTTP status codes, error types, reasons, domains, metadata, and error details."
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "errorType": {
+            "type": "string",
+            "enum": [
+              "INTERNAL_API_ERROR",
+              "INVALID_REQUEST_ERROR",
+              "AUTHENTICATION_ERROR"
+            ],
+            "description": "General enumerated error type"
+          },
+          "reason": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+[A-Z0-9]$",
+            "maxLength": 63,
+            "description": "The specific reason for the error, in UPPER_SNAKE_CASE format"
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL or endpoint path associated with the error, typically representing the service or resource domain that generated the error. This could include the base URL (e.g., 'https://api.example.com') or a specific endpoint path (e.g., '/v1/users/{userId}/update') that caused the error. This helps identify the specific API or service responsible for the error, aiding in troubleshooting and support."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata providing context for the error",
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 64
+            }
+          },
+          "details": {
+            "type": "object",
+            "description": "Details that provide more information about the error",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "A detailed message explaining the error"
+              },
+              "additionalInfo": {
+                "type": "string",
+                "description": "Additional information about the error, if applicable"
+              }
+            },
+            "required": ["message"]
+          }
+        },
+        "required": [
+          "errorType",
+          "reason",
+          "url",
+          "details"
+        ]
+      }
+    },
+    "responses": {
+      "UnauthenticatedErrorResponse": {
+        "description": "The request is not authenticated.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "errorType": {
+                      "type": "string",
+                      "enum": ["AUTHENTICATION_ERROR"],
+                      "description": "Fixed error type for unauthenticated requests"
+                    }
+                  },
+                  "required": ["errorType"]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
