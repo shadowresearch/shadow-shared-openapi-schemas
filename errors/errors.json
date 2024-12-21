@@ -13,7 +13,7 @@
           "errorType": {
             "type": "string",
             "enum": [
-              "INTERNAL_API_ERROR",
+              "INTERNAL_SERVER_ERROR",
               "INVALID_REQUEST_ERROR",
               "AUTHENTICATION_ERROR"
             ],
@@ -53,12 +53,16 @@
             "required": ["message"]
           }
         },
-        "required": [
-          "errorType",
-          "reason",
-          "url",
-          "details"
-        ]
+        "required": ["errorType", "reason", "url", "details"]
+      },
+      "ErrorResponsePayload": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/Error"
+          }
+        },
+        "required": ["error"]
       }
     },
     "responses": {
@@ -69,18 +73,80 @@
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/ErrorResponsePayload"
                 },
                 {
                   "type": "object",
                   "properties": {
-                    "errorType": {
-                      "type": "string",
-                      "enum": ["AUTHENTICATION_ERROR"],
-                      "description": "Fixed error type for unauthenticated requests"
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "errorType": {
+                          "type": "string",
+                          "enum": ["AUTHENTICATION_ERROR"]
+                        }
+                      },
+                      "required": ["errorType"]
                     }
-                  },
-                  "required": ["errorType"]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "BadRequestErrorResponse": {
+        "description": "The request is malformed or invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ErrorResponsePayload"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "errorType": {
+                          "type": "string",
+                          "enum": ["INVALID_REQUEST_ERROR"]
+                        }
+                      },
+                      "required": ["errorType"]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "InternalServerErrorResponse": {
+        "description": "An unexpected internal server error occurred.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ErrorResponsePayload"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "errorType": {
+                          "type": "string",
+                          "enum": ["INTERNAL_SERVER_ERROR"]
+                        }
+                      },
+                      "required": ["errorType"]
+                    }
+                  }
                 }
               ]
             }
