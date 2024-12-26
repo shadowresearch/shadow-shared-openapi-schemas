@@ -13,9 +13,10 @@
           "errorType": {
             "type": "string",
             "enum": [
-              "INTERNAL_SERVER_ERROR",
-              "INVALID_REQUEST_ERROR",
-              "AUTHENTICATION_ERROR"
+              "BAD_REQUEST_ERROR",
+              "AUTHENTICATION_ERROR",
+              "NOT_FOUND_ERROR",
+              "INTERNAL_SERVER_ERROR"
             ],
             "description": "General enumerated error type"
           },
@@ -66,6 +67,35 @@
       }
     },
     "responses": {
+      "BadRequest": {
+        "description": "The request is malformed or invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ErrorResponsePayload"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "errorType": {
+                          "type": "string",
+                          "enum": ["BAD_REQUEST_ERROR"]
+                        }
+                      },
+                      "required": ["errorType"]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
       "Unauthenticated": {
         "description": "The request is not authenticated.",
         "content": {
@@ -95,8 +125,8 @@
           }
         }
       },
-      "BadRequest": {
-        "description": "The request is malformed or invalid.",
+      "NotFound": {
+        "description": "The requested resource could not be found.",
         "content": {
           "application/json": {
             "schema": {
@@ -112,7 +142,7 @@
                       "properties": {
                         "errorType": {
                           "type": "string",
-                          "enum": ["INVALID_REQUEST_ERROR"]
+                          "enum": ["NOT_FOUND_ERROR"]
                         }
                       },
                       "required": ["errorType"]
