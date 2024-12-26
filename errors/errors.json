@@ -66,7 +66,7 @@
       }
     },
     "responses": {
-      "UnauthenticatedErrorResponse": {
+      "Unauthenticated": {
         "description": "The request is not authenticated.",
         "content": {
           "application/json": {
@@ -95,7 +95,7 @@
           }
         }
       },
-      "BadRequestErrorResponse": {
+      "BadRequest": {
         "description": "The request is malformed or invalid.",
         "content": {
           "application/json": {
@@ -124,7 +124,7 @@
           }
         }
       },
-      "InternalServerErrorResponse": {
+      "InternalServerError": {
         "description": "An unexpected internal server error occurred.",
         "content": {
           "application/json": {
